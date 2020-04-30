@@ -24,4 +24,7 @@ public interface BaseUserRepository extends CrudRepository<BaseUser, Integer>{
 
 	@Override
 	void delete(BaseUser entity);
+
+	Optional<BaseUser> findByName(String name);
+
 }

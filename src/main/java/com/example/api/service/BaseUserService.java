@@ -13,4 +13,6 @@ public interface BaseUserService {
 	BaseUser addBaseUser(BaseUser entity);
 
 	void deleteBaseUserById(Integer id) throws NoSuchResourceException;
+
+	Boolean isUserExist(BaseUser user);
 }

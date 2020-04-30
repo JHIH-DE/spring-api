@@ -27,7 +27,7 @@ public class BaseUserServiceImpl implements BaseUserService{
 	@Override
 	public BaseUser getBaseUserById(Integer id) throws NoSuchResourceException {
 		Optional<BaseUser> user = baseUserRepository.findById(id);
-		if (user != null) {
+		if (user.isPresent()) {
 			return user.get();
 		} else {
 			throw new NoSuchResourceException();
@@ -42,5 +42,11 @@ public class BaseUserServiceImpl implements BaseUserService{
 	@Override
 	public void deleteBaseUserById(Integer id) throws NoSuchResourceException{
 		baseUserRepository.deleteById(id);
+	}
+
+	@Override
+	public Boolean isUserExist(BaseUser user){
+		Optional<BaseUser> entity = baseUserRepository.findByName(user.getName());
+		return  entity.isPresent();
 	}
 }

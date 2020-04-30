@@ -11,8 +11,8 @@ public class BaseUser {
 	private Integer id;
 
 	@Size(max = 30)
-	@Column(length = 30)
-	private String username;
+	@Column(name="username",length = 30)
+	private String name;
 
 	@Size(max = 40)
 	@Column(length = 40)
@@ -29,12 +29,12 @@ public class BaseUser {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getName() {
+		return name;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {

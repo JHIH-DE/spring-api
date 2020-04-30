@@ -38,24 +38,38 @@ public class UserController {
 
 		List<BaseUser> baseUsers = baseUserService.getBaseUsers();
 		List<BaseUserDTO> baseUsersDTO = baseUserMapper.toDTO(baseUsers);
-
+		if (baseUsersDTO.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
 		return new ResponseEntity(baseUsersDTO, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "users/{id}", produces = "application/json")
-	public ResponseEntity<Object> getUserById(@PathVariable Integer id) throws NoSuchResourceException {
+	public ResponseEntity<Object> getUserById(@PathVariable Integer id) {
 		logger.info("Fetching User with id {}", id);
+		try {
+			BaseUser baseUser = baseUserService.getBaseUserById(id);
+			BaseUserDTO baseUserDTO = baseUserMapper.toDTO(baseUser);
+			return new ResponseEntity(baseUserDTO, HttpStatus.OK);
+		} catch (NoSuchResourceException e) {
+			logger.error("User with id {} not found.", id);
+			return new ResponseEntity(new CustomErrorType("User with id " + id
+					+ " not found"), HttpStatus.NOT_FOUND);
+		}
 
-		BaseUser baseUser = baseUserService.getBaseUserById(id);
-		BaseUserDTO baseUserDTO = baseUserMapper.toDTO(baseUser);
-		return new ResponseEntity(baseUserDTO, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "users", produces = "application/json")
 	public ResponseEntity<Object> addUsers(@RequestBody BaseUserDTO baseUserDTO) throws NoSuchResourceException {
 		logger.info("Creating User : {}", baseUserDTO);
-
 		BaseUser baseUser = baseUserMapper.toEntity(baseUserDTO);
+		if (baseUserService.isUserExist(baseUser)) {
+			logger.error("Unable to create. A User with name {} already exist", baseUserDTO.getName());
+			return new ResponseEntity(new CustomErrorType("Unable to create. A User with name " +
+					baseUserDTO.getName() + " already exist."), HttpStatus.CONFLICT);
+		}
+
 		baseUser = baseUserService.addBaseUser(baseUser);
 		baseUserDTO = baseUserMapper.toDTO(baseUser);
 		return new ResponseEntity(baseUserDTO, HttpStatus.CREATED);
