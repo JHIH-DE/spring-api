@@ -1,0 +1,40 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'net.ltgt.apt' version '0.8' // MapStruct
+
+}
+
+apply plugin: 'idea' // MapStruct
+apply plugin: 'eclipse' // MapStruct
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring boot framework
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// MapStruct
+	compile group: 'org.mapstruct', name: 'mapstruct-jdk8', version: '1.2.0.Final'
+	compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.2.0.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+	implementation 'mysql:mysql-connector-java'
+	
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+test {
+	useJUnitPlatform()
+}
