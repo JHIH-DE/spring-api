@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Service("BaseUserService")
 public class BaseUserServiceImpl implements BaseUserService{
@@ -21,5 +22,25 @@ public class BaseUserServiceImpl implements BaseUserService{
 		} else {
 			throw new NoSuchResourceException();
 		}
+	}
+
+	@Override
+	public BaseUser getBaseUserById(Integer id) throws NoSuchResourceException {
+		Optional<BaseUser> user = baseUserRepository.findById(id);
+		if (user != null) {
+			return user.get();
+		} else {
+			throw new NoSuchResourceException();
+		}
+	}
+
+	@Override
+	public BaseUser addBaseUser(BaseUser entity){
+		return baseUserRepository.save(entity);
+	}
+
+	@Override
+	public void deleteBaseUserById(Integer id) throws NoSuchResourceException{
+		baseUserRepository.deleteById(id);
 	}
 }

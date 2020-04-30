@@ -1,6 +1,7 @@
 package com.example.api.dto;
 
 import com.example.api.dao.entity.BaseUser;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -21,4 +22,7 @@ public interface BaseUserMapper {
 	BaseUserDTO toDTO(BaseUser entity);
 
 	List<BaseUserDTO> toDTO(List<BaseUser> entities);
+
+	@InheritInverseConfiguration
+	BaseUser toEntity(BaseUserDTO dto);
 }
