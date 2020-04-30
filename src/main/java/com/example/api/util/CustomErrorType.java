@@ -1,13 +1,19 @@
 package com.example.api.util;
 
 public class CustomErrorType {
-	private String errorMessage;
+	private String message;
+	private int code;
 
-	public CustomErrorType(String errorMessage){
-		this.errorMessage = errorMessage;
+	public CustomErrorType(int code,String message){
+		this.code = code;
+		this.message = message;
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
+	public String getMessage() {
+		return message;
+	}
+
+	public int getCode() {
+		return code;
 	}
 }

@@ -33,7 +33,7 @@ public class UserController {
 	private BaseUserMapper baseUserMapper;
 
 	@GetMapping(value = "users", produces = "application/json")
-	public ResponseEntity<BaseUserDTO> getUsers() throws NoSuchResourceException {
+	public ResponseEntity<Object> getUsers() throws NoSuchResourceException {
 		logger.info("Fetching All User");
 
 		List<BaseUser> baseUsers = baseUserService.getBaseUsers();
@@ -54,8 +54,9 @@ public class UserController {
 			return new ResponseEntity(baseUserDTO, HttpStatus.OK);
 		} catch (NoSuchResourceException e) {
 			logger.error("User with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("User with id " + id
-					+ " not found"), HttpStatus.NOT_FOUND);
+			int code = HttpStatus.NOT_FOUND.value();
+			String errorMsg = "User with id " + id + " not found";
+			return new ResponseEntity(new CustomErrorType(code, errorMsg), HttpStatus.NOT_FOUND);
 		}
 
 	}
@@ -66,8 +67,9 @@ public class UserController {
 		BaseUser baseUser = baseUserMapper.toEntity(baseUserDTO);
 		if (baseUserService.isUserExist(baseUser)) {
 			logger.error("Unable to create. A User with name {} already exist", baseUserDTO.getName());
-			return new ResponseEntity(new CustomErrorType("Unable to create. A User with name " +
-					baseUserDTO.getName() + " already exist."), HttpStatus.CONFLICT);
+			int code = HttpStatus.CONFLICT.value();
+			String errorMsg = "Unable to create. A User with name " + baseUserDTO.getName() + " already exist.";
+			return new ResponseEntity(new CustomErrorType(code, errorMsg), HttpStatus.CONFLICT);
 		}
 
 		baseUser = baseUserService.addBaseUser(baseUser);
@@ -82,8 +84,9 @@ public class UserController {
 		BaseUser user = baseUserService.getBaseUserById(id);
 		if (user == null) {
 			logger.error("Unable to delete. User with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. User with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
+			int code = HttpStatus.NOT_FOUND.value();
+			String errorMsg = "Unable to delete. User with id " + id + " not found.";
+			return new ResponseEntity(new CustomErrorType(code, errorMsg), HttpStatus.NOT_FOUND);
 		}
 		baseUserService.deleteBaseUserById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
